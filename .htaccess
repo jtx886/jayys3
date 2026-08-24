@@ -1,0 +1,46 @@
+# InfinityFree .htaccess for Jay影视
+# 兼容所有PHP版本，SQLite数据库保护
+
+Options -Indexes
+DirectoryIndex index.php index.html
+
+# 保护数据库和配置文件
+<FilesMatch "^(config\.php|\.htaccess|\.user\.ini|jayvideo\.db)$">
+    Require all denied
+</FilesMatch>
+
+# 保护 data 目录
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^data/ - [F,L]
+    RewriteRule ^classes/ - [F,L]
+    RewriteRule ^includes/ - [F,L]
+</IfModule>
+
+# PHP设置兼容性（适用于PHP 5.4+）
+<IfModule mod_php.c>
+    php_value upload_max_filesize 16M
+    php_value post_max_size 20M
+    php_value max_execution_time 300
+    php_value display_errors Off
+</IfModule>
+
+# 默认字符集
+AddDefaultCharset UTF-8
+
+# 缓存静态资源
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 7 days"
+    ExpiresByType image/jpg "access plus 30 days"
+    ExpiresByType image/jpeg "access plus 30 days"
+    ExpiresByType image/gif "access plus 30 days"
+    ExpiresByType image/png "access plus 30 days"
+    ExpiresByType image/svg+xml "access plus 30 days"
+    ExpiresByType application/javascript "access plus 7 days"
+</IfModule>
+
+# Gzip压缩
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain text/html text/xml text/css application/javascript application/json
+</IfModule>
